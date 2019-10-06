@@ -18,12 +18,7 @@ const getCertInfo = (certInfo, certId) => {
         certID: certId
     }
 }
-const setData = (data) => {
-    return {
-        type: 'SET_DATA',
-        payload: data
-    }
-}
+
 
 const onSign = (signData) => {
     return {
@@ -35,7 +30,6 @@ export {
     isPlugin,
     getListCert,
     getCertInfo,
-    setData,
     onSign
 
 }

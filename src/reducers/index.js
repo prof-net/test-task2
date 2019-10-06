@@ -4,8 +4,8 @@ const initialState = {
     plugin: '',
     listCert: [],
     certInfo: {},
-    certID: '',
-    data: '',
+    certID: null,
+
     sign: ''
 }
 
@@ -18,8 +18,7 @@ const reducer = (state = initialState, action) => {
             return {...state, listCert: action.payload}
         case 'GET_CERT_INFO':
             return {...state, certInfo: action.certInfo, certID: action.certID}
-        case 'SET_DATA':
-            return {...state, data: action.payload}
+
         case 'ON_SIGN':
             return {...state, sign: action.payload}
 
