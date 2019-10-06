@@ -1,36 +1,28 @@
 import React, {Component} from 'react';
 import './App.css';
 import { CryptoPro } from 'ruscryptojs';
+import { connect } from 'react-redux'
+import {
+    isPlugin,
+    getListCert,
+    getCertInfo,
+    setData,
+    onSign} from './../../actions/index'
 
 
 class App extends Component {
 
     cryptopro = new CryptoPro();
-
-    state = {
-        plugin: '',
-        listCert: [],
-        certInfo: {},
-        certID: '',
-        data: '',
-        sign: ''
-    }
-
-
     initPlugin = async () => {
         await this.cryptopro.init()
             .then((info) => {
-                console.log('Initialized', info);
-                this.setState({
-                    plugin: info.version
-                })
+
+                this.props.isPlugin(info.version)
+
             })
         await this.cryptopro.listCertificates()
             .then((list) => {
-                console.log(list)
-                this.setState({
-                    listCert: list
-                })
+               this.props.getListCert(list)
             })
     }
 
@@ -39,51 +31,29 @@ class App extends Component {
     }
 
     onSign = (idCert) => {
-
-        console.log(idCert)
-
-        const str64 = btoa(this.state.data)
-
+        const str64 = btoa(encodeURI(this.props.data))
         this.cryptopro.signData(str64, idCert).then((signStr) => {
-            this.setState({
-                sign: signStr
-            })
+            this.props.onSign(signStr)
         })
-
-
     }
 
     onChangeData = (e) => {
-        this.setState({
-            data: e.target.value
-        })
+        this.props.setData(e.target.value)
     }
 
 
     onCert = (idCert) => {
         this.cryptopro.certificateInfo(idCert).then((info) => {
 
-            //Кому выдан сертификат
-            console.log(info.SubjectName)
-
-            //Кем выдан сертификат
-            console.log(info.IssuerName)
-
-            //Срок действия сертификата с .. по ..
-            console.log(`действет с ${info.ValidFromDate} по ${info.ValidToDate}`)
-
-            this.setState({
-                certInfo: info,
-                certID: idCert
-            })
+            this.props.getCertInfo(info, idCert)
 
         })
     }
 
-
     render() {
 
-    const {plugin, listCert, certInfo, certID, sign} = this.state
+    const {plugin, listCert, certInfo, certID, sign } = this.props
+
     const pluginVersion = plugin ? `Версия плагина: ${plugin}` : 'Плагин не доступен'
 
     const certs = listCert.map((cert) => {
@@ -92,7 +62,6 @@ class App extends Component {
             <option key={cert.id} value="s1" onClick={()=>this.onCert(cert.id)}>{cert.name}</option>
         )
     })
-
 
     return (
         <div>
@@ -128,12 +97,30 @@ class App extends Component {
               <textarea rows="10" cols="45" name="text" defaultValue={sign}></textarea>
           </div>
 
-
         </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+    return {
+        plugin: state.plugin,
+        listCert: state.listCert,
+        certInfo: state.certInfo,
+        certID: state.certID,
+        data: state.data,
+        sign: state.sign
+    }
+}
+
+const mapDispatchToProps = {
+    isPlugin,
+    getListCert,
+    getCertInfo,
+    setData,
+    onSign
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
 
 
