@@ -7,11 +7,12 @@ const Sign = ({sign}) => {
         <React.Fragment>
             <h2>Подпись</h2>
             <div className="Signature">
-                <textarea rows="10" cols="45" name="text" defaultValue={sign}></textarea>
+                <textarea rows="10" cols="80" name="text" defaultValue={sign}></textarea>
             </div>
         </React.Fragment>
     )
 }
+
 
 const mapStateToProps = (state) => {
     return {
