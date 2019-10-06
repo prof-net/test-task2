@@ -2,7 +2,7 @@
   "name": "test-task2",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://prof-net.github.io/test-task2",
+  "homepage": "https://prof-net.github.io/test-task2/",
   "dependencies": {
     "react": "^16.10.1",
     "react-dom": "^16.10.1",
